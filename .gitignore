@@ -61,3 +61,19 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# C preprocessor
+*.pp
+
+# Configuration-specific folders
+Debug
+Release
+
+# Code Composer Studio files
+.cproject
+.ccsproject
+.project
+targetConfigs
+.settings
+.launches
+lnk_*.cmd
