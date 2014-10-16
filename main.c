@@ -10,7 +10,7 @@ void main(void) {
 
     _EINT();
     while (1) {
-		LPM3;
+		LPM1;
 	    one_process_state();
 	}
 }

@@ -35,7 +35,7 @@
 
 #define TIME_RESET_MIN				480
 #define TIME_PRESENCE				150
-#define TIME_TS_VALUE				30
+#define TIME_TS_VALUE				40
 
 #define COMMAND_ROM_SEARCH			0xF0
 #define COMMAND_ROM_SEARCH_COND		0xEC
@@ -52,12 +52,13 @@
 #define INT_ENABLE					(ONE_IE |= ONE_BIT_IN)
 #define INT_DISABLE					(ONE_IE &= ~ONE_BIT_IN)
 
+#define TIMER_DIV					1
+#define TIMER_MUL					1
+#define DELAY_US(us)				(us / TIMER_DIV * TIMER_MUL)
+
 typedef enum {
 	state_idle,
-	state_waiting_for_reset,
-	state_reset,
-	state_waiting_for_timeslot,
-	state_timeslot
+	state_waiting_for_reset
 } one_state_type;
 
 one_state_type state;
@@ -73,12 +74,18 @@ void clock_system_setup() {
 	 * SMCLK = 1 MHz
 	 */
 	DCOCTL = CALDCO_8MHZ;
+	BCSCTL1 = CALBC1_8MHZ;
+
 	BCSCTL2 |= DIVS_3;
 }
 
 inline void timer_start() {
 	// Upmode
 	TA0CTL |= MC_1;
+}
+
+inline void timer_stop() {
+	TA0CTL &= ~(BIT4 | BIT5);
 }
 
 void timer_init() {
@@ -105,7 +112,7 @@ void one_init() {
 void process_command(uint8_t command) {
 	switch (command) {
 	case COMMAND_ROM_SEARCH:
-
+		_NOP();
 		break;
 	case COMMAND_ROM_SEARCH_COND:
 		break;
@@ -121,11 +128,36 @@ void process_command(uint8_t command) {
 }
 
 void process_state_idle() {
-	TA0CCR0 = TIME_RESET_MIN;
+	TA0CCR0 = DELAY_US(TIME_RESET_MIN);
 	timer_start();
 	//
 	state = state_waiting_for_reset;
 	EDGE_RISE;
+}
+
+void process_timeslot_sequence() {
+	uint8_t current_bit = 0;
+	data_bits_processed = 0;
+	// PRESENCE was sent
+	OUTPUT_DEASSERT;
+	EDGE_FALL;
+	INT_ENABLE;
+	LPM1;
+	// Timeslot starts
+	TA0CCR0 = 0xFFFF;
+	timer_start();
+	EDGE_RISE;
+	while (data_bits_processed < 8) {
+		LPM1;
+		current_bit ^= (TA0R < DELAY_US(TIME_TS_VALUE));
+		data |= current_bit << data_bits_processed;
+		TA0R = 0;
+		data_bits_processed++;
+	}
+	timer_stop();
+	INT_DISABLE;
+	data_bits_processed = 0;
+	process_command(data);
 }
 
 void process_state_waiting_for_reset() {
@@ -134,46 +166,16 @@ void process_state_waiting_for_reset() {
 		EDGE_FALL;
 		state = state_idle;
 	} else {
-		TA0CCR0 = TIME_PRESENCE;
+		LPM1;
+		TA0CCR0 = DELAY_US(TIME_PRESENCE);
 		timer_start();
 		//
 		INT_DISABLE;
 		OUTPUT_ASSERT;
 		//
-		state = state_reset;
 		timer_flag = 0;
-	}
-}
-
-void process_state_reset() {
-	OUTPUT_DEASSERT;
-	EDGE_FALL;
-	INT_ENABLE;
-	state = state_waiting_for_timeslot;
-	data_bits_processed = 0;
-}
-
-void process_state_waiting_for_timeslot() {
-	TA0CCR0 = 0xFF00;
-	timer_start();
-	EDGE_RISE;
-	state = state_timeslot;
-}
-
-void process_state_timeslot() {
-	if (0 == timer_flag) {
-		TA0CTL &= ~(BIT4 | BIT5);
-		data |= (TA0R < TIME_TS_VALUE) << data_bits_processed;
-		if (7 == data_bits_processed) {
-			process_command(data);
-			return;
-		}
-		data_bits_processed++;
-	} else {
-		EDGE_FALL;
-		data_bits_processed = 0;
-		timer_flag = 0;
-		state = state_idle;
+		LPM1;
+		process_timeslot_sequence();
 	}
 }
 
@@ -185,15 +187,6 @@ void one_process_state() {
 	case state_waiting_for_reset:
 		process_state_waiting_for_reset();
 		break;
-	case state_reset:
-		process_state_reset();
-		break;
-	case state_waiting_for_timeslot:
-		process_state_waiting_for_timeslot();
-		break;
-	case state_timeslot:
-		process_state_timeslot();
-		break;
 	default:
 		break;
 	}
@@ -203,19 +196,18 @@ void one_process_state() {
 __interrupt void one_interrupt() {
 	if (ONE_IFG & ONE_BIT_IN) {
 		ONE_IFG &= ~ONE_BIT_IN;
-		LPM3_EXIT;
+		LPM1_EXIT;
 	}
 }
 
 #pragma vector=TIMER0_A0_VECTOR
 __interrupt void one_timer_interrupt() {
 	if (TA0CTL & CCIFG) {
-		timer_flag = 1;
-		// Mode = MC__STOP
-		TA0CTL &= ~(BIT4 | BIT5);
 		TA0R = 0;
+		timer_stop();
 		// Clear interrupt flag
 		TA0CTL &= ~CCIFG;
-		LPM3_EXIT;
+		timer_flag = 1;
+		LPM1_EXIT;
 	}
 }
