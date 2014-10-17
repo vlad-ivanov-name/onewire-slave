@@ -10,12 +10,13 @@
 #define ONE_B_OUT		4
 
 typedef struct {
-	uint8_t crc;
-	uint8_t serial[6];
-	uint8_t family;
-} one_rom;
+	uint8_t rom[8];
+	void (* process)(uint8_t data, void * device);
+	void (* init)(void * device);
+	void * device;
+} one_device;
 
-void one_init();
+void one_init(one_device * d, uint8_t count);
 void one_process_state();
 
 #endif
