@@ -35,8 +35,8 @@
 
 #define TIME_RESET_MIN				480
 #define TIME_PRESENCE				150
-#define TIME_TS_VALUE				40
-#define TIME_TS_OUT					60
+#define TIME_TS_VALUE				30
+#define TIME_TS_OUT					20
 
 #define COMMAND_ROM_SEARCH			0xF0
 #define COMMAND_ROM_SEARCH_COND		0xEC
@@ -66,9 +66,6 @@ typedef enum {
 one_state_type state;
 
 uint8_t timer_flag = 0;
-uint8_t data;
-uint8_t data_bits_processed;
-uint8_t current_bit;
 uint8_t search_rom_cond = 0;
 
 one_device * device;
@@ -145,6 +142,7 @@ void one_init(one_device * d, uint8_t count) {
 				&(device[i].rom[1]),
 				(sizeof(device[i].rom) / sizeof(typeof(device[i].rom[0]))) - 1
 			);
+		device[i].init(device[i].device);
 	} while (i--);
 }
 
@@ -156,6 +154,7 @@ void process_command(uint8_t command) {
 		EDGE_FALL;
 		INT_ENABLE;
 		state = state_search_rom;
+		one_process_state();
 		break;
 	case COMMAND_ROM_READ:
 		break;
@@ -176,45 +175,36 @@ void process_state_idle() {
 	EDGE_RISE;
 }
 
-void timeslot_read() {
+uint8_t timeslot_read() {
+	TA0CCR0 = DELAY_US(TIME_TS_VALUE);
+	timer_start();
 	LPM1;
-	current_bit ^= ((TA0R < DELAY_US(TIME_TS_VALUE)) | (TA0R > DELAY_US(TIME_TS_VALUE * 5 / 2)));
-	data |= current_bit << data_bits_processed;
-	TA0R = 0;
+	return ((ONE_PIN & ONE_BIT_IN) > 0);
 }
 
 void timeslot_write(uint8_t bit) {
 	LPM1;
 	TA0CCR0 = DELAY_US(TIME_TS_OUT);
-	if (bit) {
-		ONE_POUT |= ONE_BIT_OUT;
+	if (!bit) {
+		OUTPUT_ASSERT;
 	}
 	timer_start();
 	LPM1;
 	timer_stop();
-	ONE_POUT &= ~ONE_BIT_OUT;
+	OUTPUT_DEASSERT;
 }
 
-void process_timeslot_sequence() {
-	current_bit = 0;
-	data_bits_processed = 0;
-	// PRESENCE was sent
-	OUTPUT_DEASSERT;
+uint8_t one_read_byte() {
+	uint8_t data = 0;
+	uint8_t data_bits_processed = 0;
 	EDGE_FALL;
-	INT_ENABLE;
-	LPM1;
-	// Timeslot starts
 	TA0CCR0 = 0xFFFF;
-	timer_start();
-	EDGE_RISE;
 	while (data_bits_processed < 8) {
-		timeslot_read();
+		LPM1;
+		data |= (timeslot_read()) << data_bits_processed;
 		data_bits_processed++;
 	}
-	timer_stop();
-	INT_DISABLE;
-	data_bits_processed = 0;
-	process_command(data);
+	return data;
 }
 
 void process_state_waiting_for_reset() {
@@ -232,12 +222,28 @@ void process_state_waiting_for_reset() {
 		//
 		timer_flag = 0;
 		LPM1;
-		process_timeslot_sequence();
+		//
+		OUTPUT_DEASSERT;
+		INT_ENABLE;
+		process_command(one_read_byte());
 	}
 }
 
 void process_state_search_rom() {
-
+	uint8_t i = 63;
+	uint8_t bit = 1;
+	uint8_t j = 0;
+	do {
+		for (j = device_count; j; j--) {
+			bit &= (device[j].rom[i / 8] >> (i % 8));
+		}
+		timeslot_write(bit);
+		timeslot_write(~bit);
+		timeslot_read();
+		timer_stop();
+	} while (i--);
+	EDGE_FALL;
+	state = state_idle;
 }
 
 void one_process_state() {
