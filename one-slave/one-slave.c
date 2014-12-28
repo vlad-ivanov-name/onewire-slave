@@ -35,8 +35,9 @@
 
 #define TIME_RESET_MIN				480
 #define TIME_PRESENCE				150
+#define TIME_PRESENCE_DELAY			10
 #define TIME_TS_VALUE				30
-#define TIME_TS_OUT					20
+#define TIME_TS_OUT					25
 
 #define COMMAND_ROM_SEARCH			0xF0
 #define COMMAND_ROM_SEARCH_COND		0xEC
@@ -54,8 +55,15 @@
 #define INT_DISABLE					(ONE_IE &= ~ONE_BIT_IN)
 
 #define TIMER_DIV					1
-#define TIMER_MUL					1
-#define DELAY_US(us)				(us / TIMER_DIV * TIMER_MUL)
+#define TIMER_MUL					2
+#define DELAY_US(us)				((us / TIMER_DIV) * TIMER_MUL)
+
+#define MAX_DEVICE_COUNT			4
+
+#define MASK_LOWER_4 				0x0F
+#define MASK_HIGH_4 				0xF0
+
+#define LSB_EXTEND(a)				((a & 0x01) ? (~(0 & a)) : 0)
 
 typedef enum {
 	state_idle,
@@ -75,11 +83,11 @@ void clock_system_setup() {
 	/*
 	 * Basic clock system+ setup
 	 *
-	 * MCLK = 8 MHz
-	 * SMCLK = 1 MHz
+	 * MCLK = 16 MHz
+	 * SMCLK = 2 MHz
 	 */
-	DCOCTL = CALDCO_8MHZ;
-	BCSCTL1 = CALBC1_8MHZ;
+	DCOCTL = CALDCO_16MHZ;
+	BCSCTL1 = CALBC1_16MHZ;
 
 	BCSCTL2 |= DIVS_3;
 }
@@ -108,9 +116,8 @@ void timer_init() {
 uint8_t crc8(uint8_t * buffer, uint8_t size) {
 	uint8_t crc = 0;
 	uint8_t byte, i, m;
-	buffer += size - 1;
 	while (size--) {
-		byte = * buffer--;
+		byte = * buffer++;
 		for (i = 8; i; i--) {
 			m = (crc ^ byte) & 0x01;
 			crc >>= 1;
@@ -122,6 +129,9 @@ uint8_t crc8(uint8_t * buffer, uint8_t size) {
 }
 
 void one_init(one_device * d, uint8_t count) {
+	if (count > 7)
+		return;
+	//
 	clock_system_setup();
 	timer_init();
 	state = state_idle;
@@ -135,13 +145,11 @@ void one_init(one_device * d, uint8_t count) {
 	device = d;
 	device_count = count;
 	uint8_t i = count - 1;
+	uint8_t crc_array[7];
 	do {
 		// Calculate CRC8
-		device[i].rom[0] =
-			crc8(
-				&(device[i].rom[1]),
-				(sizeof(device[i].rom) / sizeof(typeof(device[i].rom[0]))) - 1
-			);
+		memcpy(&crc_array, (void *) &device[i].rom, 7);
+		device[i].rom |= (uint64_t) crc8((uint8_t *) &crc_array, 7) << 56;
 		device[i].init(device[i].device);
 	} while (i--);
 }
@@ -151,24 +159,19 @@ void process_command(uint8_t command) {
 	case COMMAND_ROM_SEARCH_COND:
 		search_rom_cond = 1;
 	case COMMAND_ROM_SEARCH:
-		EDGE_FALL;
 		INT_ENABLE;
 		state = state_search_rom;
 		one_process_state();
 		break;
-	case COMMAND_ROM_READ:
-		break;
-	case COMMAND_ROM_MATCH:
-		break;
-	case COMMAND_ROM_SKIP:
-		break;
 	default:
+		state = state_idle;
 		break;
 	}
 }
 
 void process_state_idle() {
 	TA0CCR0 = DELAY_US(TIME_RESET_MIN);
+	timer_flag = 0;
 	timer_start();
 	//
 	state = state_waiting_for_reset;
@@ -176,6 +179,7 @@ void process_state_idle() {
 }
 
 uint8_t timeslot_read() {
+	LPM1;
 	TA0CCR0 = DELAY_US(TIME_TS_VALUE);
 	timer_start();
 	LPM1;
@@ -190,7 +194,6 @@ void timeslot_write(uint8_t bit) {
 	}
 	timer_start();
 	LPM1;
-	timer_stop();
 	OUTPUT_DEASSERT;
 }
 
@@ -200,7 +203,6 @@ uint8_t one_read_byte() {
 	EDGE_FALL;
 	TA0CCR0 = 0xFFFF;
 	while (data_bits_processed < 8) {
-		LPM1;
 		data |= (timeslot_read()) << data_bits_processed;
 		data_bits_processed++;
 	}
@@ -210,9 +212,15 @@ uint8_t one_read_byte() {
 void process_state_waiting_for_reset() {
 	// Check if reset was long enough
 	if (0 == timer_flag) {
+		TA0R = 0;
+		timer_stop();
 		EDGE_FALL;
 		state = state_idle;
 	} else {
+		timer_flag = 0;
+		LPM1;
+		TA0CCR0 = DELAY_US(TIME_PRESENCE_DELAY);
+		timer_start();
 		LPM1;
 		TA0CCR0 = DELAY_US(TIME_PRESENCE);
 		timer_start();
@@ -220,7 +228,6 @@ void process_state_waiting_for_reset() {
 		INT_DISABLE;
 		OUTPUT_ASSERT;
 		//
-		timer_flag = 0;
 		LPM1;
 		//
 		OUTPUT_DEASSERT;
@@ -230,19 +237,46 @@ void process_state_waiting_for_reset() {
 }
 
 void process_state_search_rom() {
-	uint8_t i = 63;
-	uint8_t bit = 1;
-	uint8_t j = 0;
-	do {
-		for (j = device_count; j; j--) {
-			bit &= (device[j].rom[i / 8] >> (i % 8));
+	uint8_t mask = (MASK_HIGH_4 >> (4 - device_count)) & MASK_LOWER_4;
+	uint8_t device_addr[32] = {0};
+	uint8_t current;
+	uint8_t index;
+	uint8_t direction;
+	uint8_t addr_bits;
+	uint8_t device_index;
+
+	for (index = 0; index < 64; index++) {
+		for (device_index = 0; device_index < device_count; device_index++) {
+			current = device[device_index].rom & ((uint64_t)1 << index) ? 1 : 0;
+			if (index & 0x01) {
+				device_addr[index >> 1] |= current << (device_index + 4);
+			} else {
+				device_addr[index >> 1] |= current << (device_index);
+			}
 		}
-		timeslot_write(bit);
-		timeslot_write(~bit);
-		timeslot_read();
-		timer_stop();
-	} while (i--);
-	EDGE_FALL;
+	}
+
+	index = 0;
+	while (1) {
+		addr_bits =
+			(index & 0x01) ?
+			device_addr[index >> 1] >> 4 :
+			device_addr[index >> 1] & MASK_LOWER_4;
+
+		addr_bits |= mask;
+		timeslot_write(addr_bits == MASK_LOWER_4);
+		timeslot_write(addr_bits == mask);
+
+		direction = timeslot_read();
+		direction = LSB_EXTEND(direction);
+		// direction: either 0xFF or 0x00
+		// addr_bits: 0000 ABCD
+		mask |= (addr_bits ^ direction) & MASK_LOWER_4;
+		if ((mask == MASK_LOWER_4) || (index == 63)) {
+			break;
+		}
+		index++;
+	}
 	state = state_idle;
 }
 

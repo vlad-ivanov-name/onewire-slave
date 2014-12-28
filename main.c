@@ -6,7 +6,7 @@
 
 static one_device devices[] = {
 	{
-		.rom = {0x00, 0x00, 0x02, 0x03, 0x04, 0x05, 0x00, ONE_2408_FC},
+		.rom = 0x00AABBCCEEFF1100 | ONE_2408_FC,
 		.process = &one_2408_process,
 		.init = &one_2408_init,
 		.device = &(one_2408) {
@@ -14,7 +14,7 @@ static one_device devices[] = {
 		}
 	},
 	{
-		.rom = {0x00, 0x00, 0x02, 0x03, 0x04, 0x06, 0x00, ONE_2408_FC},
+		.rom = 0x00FF02030406FF00 | ONE_2408_FC,
 		.process = &one_2408_process,
 		.init = &one_2408_init,
 		.device = &(one_2408) {
@@ -30,7 +30,7 @@ void main(void) {
     WDTCTL = WDTPW | WDTHOLD;
     one_init(
     	(one_device *) &devices,
-    	sizeof(devices) / sizeof(* devices)
+    	ARRAY_SIZE(devices)
     );
 
     _EINT();
