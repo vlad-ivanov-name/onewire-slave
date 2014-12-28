@@ -19,7 +19,7 @@ typedef struct {
 	void * device;
 } one_device;
 
-void one_init(one_device * d, uint8_t count);
+void one_init(one_device * d, const uint8_t count);
 void one_process_state();
 
 #endif

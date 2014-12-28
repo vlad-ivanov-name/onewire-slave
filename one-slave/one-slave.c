@@ -128,9 +128,10 @@ uint8_t crc8(uint8_t * buffer, uint8_t size) {
 	return crc;
 }
 
-void one_init(one_device * d, uint8_t count) {
-	if (count > 7)
+void one_init(one_device * d, const uint8_t count) {
+	if (count > 4) {
 		return;
+	}
 	//
 	clock_system_setup();
 	timer_init();
