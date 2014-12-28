@@ -278,6 +278,7 @@ void process_state_search_rom() {
 		}
 		index++;
 	}
+	search_rom_cond = 0;
 	state = state_idle;
 }
 
