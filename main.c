@@ -7,7 +7,6 @@
 static one_device devices[] = {
 	{
 		.rom = 0x00AABBCCEEFF1100 | ONE_2408_FC,
-		.process = &one_2408_process,
 		.init = &one_2408_init,
 		.device = &(one_2408) {
 			.port_base = &P1IN
@@ -15,7 +14,6 @@ static one_device devices[] = {
 	},
 	{
 		.rom = 0x00FF02030406FF00 | ONE_2408_FC,
-		.process = &one_2408_process,
 		.init = &one_2408_init,
 		.device = &(one_2408) {
 			.port_base = &P1IN
@@ -35,7 +33,6 @@ void main(void) {
 
     _EINT();
     while (1) {
-		LPM1;
 	    one_process_state();
 	}
 }

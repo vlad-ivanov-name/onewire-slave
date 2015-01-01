@@ -151,7 +151,7 @@ void one_init(one_device * d, const uint8_t count) {
 		// Calculate CRC8
 		memcpy(&crc_array, (void *) &device[i].rom, 7);
 		device[i].rom |= (uint64_t) crc8((uint8_t *) &crc_array, 7) << 56;
-		device[i].init(device[i].device);
+		device[i].init(&device[i]);
 	} while (i--);
 }
 
@@ -162,7 +162,6 @@ void process_command(uint8_t command) {
 	case COMMAND_ROM_SEARCH:
 		INT_ENABLE;
 		state = state_search_rom;
-		one_process_state();
 		break;
 	default:
 		state = state_idle;
@@ -171,6 +170,7 @@ void process_command(uint8_t command) {
 }
 
 void process_state_idle() {
+	LPM1;
 	TA0CCR0 = DELAY_US(TIME_RESET_MIN);
 	timer_flag = 0;
 	timer_start();
@@ -211,6 +211,7 @@ uint8_t one_read_byte() {
 }
 
 void process_state_waiting_for_reset() {
+	LPM1;
 	// Check if reset was long enough
 	if (0 == timer_flag) {
 		TA0R = 0;
