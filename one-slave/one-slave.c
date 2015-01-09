@@ -68,13 +68,16 @@
 typedef enum {
 	state_idle,
 	state_waiting_for_reset,
-	state_search_rom
+	state_search_rom,
+	state_match_rom,
+	state_device_selected
 } one_state_type;
 
 one_state_type state;
 
 uint8_t timer_flag = 0;
 uint8_t search_rom_cond = 0;
+uint8_t selected_device;
 
 one_device * device;
 uint8_t device_count;
@@ -128,6 +131,24 @@ uint8_t crc8(uint8_t * buffer, uint8_t size) {
 	return crc;
 }
 
+/*
+ * Copyright: https://github.com/pbrook/arduino-onewire/
+ */
+uint16_t crc16(uint8_t input, uint16_t seed) {
+	static const uint8_t oddparity[16] = { 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 };
+	uint16_t cdata = input;
+	cdata = (cdata ^ (seed & 0xff)) & 0xff;
+	seed >>= 8;
+	if (oddparity[cdata & 0x0F] ^ oddparity[cdata >> 4]) {
+		seed ^= 0xC001;
+	}
+	cdata <<= 6;
+	seed ^= cdata;
+	cdata <<= 1;
+	seed ^= cdata;
+	return seed;
+}
+
 void one_init(one_device * d, const uint8_t count) {
 	if (count > 4) {
 		return;
@@ -163,6 +184,9 @@ void process_command(uint8_t command) {
 		INT_ENABLE;
 		state = state_search_rom;
 		break;
+	case COMMAND_ROM_MATCH:
+		state = state_match_rom;
+		break;
 	default:
 		state = state_idle;
 		break;
@@ -196,6 +220,16 @@ void timeslot_write(uint8_t bit) {
 	timer_start();
 	LPM1;
 	OUTPUT_DEASSERT;
+}
+
+void one_write_byte(uint8_t data) {
+	uint8_t data_bits_processed = 0;
+	EDGE_FALL;
+	TA0CCR0 = 0xFFFF;
+	while (data_bits_processed < 8) {
+		timeslot_write(data & (1 << data_bits_processed));
+		data_bits_processed++;
+	}
 }
 
 uint8_t one_read_byte() {
@@ -283,6 +317,34 @@ void process_state_search_rom() {
 	state = state_idle;
 }
 
+void process_state_match_rom() {
+	volatile union {
+		uint64_t data_int64;
+		uint8_t data_int8[8];
+	} address;
+	uint8_t i;
+
+	for (i = 0; i < 8; i++) {
+		address.data_int8[i] = one_read_byte();
+	}
+
+	for (i = 0; i < device_count; i++) {
+		if (device[i].rom == address.data_int64) {
+			state = state_device_selected;
+			selected_device = i;
+			return;
+		}
+	}
+
+	state = state_idle;
+}
+
+void process_state_device_selected() {
+	void * device_data = device[selected_device].device;
+	device[selected_device].process(device_data);
+	state = state_idle;
+}
+
 void one_process_state() {
 	switch (state) {
 	case state_idle:
@@ -293,6 +355,12 @@ void one_process_state() {
 		break;
 	case state_search_rom:
 		process_state_search_rom();
+		break;
+	case state_match_rom:
+		process_state_match_rom();
+		break;
+	case state_device_selected:
+		process_state_device_selected();
 		break;
 	default:
 		break;
