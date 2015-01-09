@@ -22,4 +22,8 @@ typedef struct {
 void one_init(one_device * d, const uint8_t count);
 void one_process_state();
 
+uint8_t one_read_byte();
+void one_write_byte(uint8_t data);
+uint16_t crc16(uint8_t input, uint16_t seed);
+
 #endif
