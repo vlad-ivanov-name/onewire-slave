@@ -1,75 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="206.75px" height="269.584px" viewBox="0 0 206.75 269.584" enable-background="new 0 0 206.75 269.584"
 	 xml:space="preserve">
-<text transform="matrix(1 0 0 1 16.4502 106.1895)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">T</tspan><tspan x="3.603" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">o</tspan><tspan x="7.562" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08"> </tspan><tspan x="9.536" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">M</tspan><tspan x="15.419" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">SP43</tspan><tspan x="32.795" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">0</tspan></text>
-<text transform="matrix(1 0 0 1 95.5903 228.5303)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">LD</tspan><tspan x="9.079" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">11</tspan><tspan x="15.92" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">17D33T</tspan><tspan x="41.193" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">R</tspan></text>
+<text transform="matrix(1 0 0 1 16.4502 106.1895)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">T</tspan><tspan x="3.603" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">o</tspan><tspan x="7.562" y="0" fill="#808080" font-family="'Arial'" font-size="7.08"> </tspan><tspan x="9.536" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">M</tspan><tspan x="15.419" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">SP43</tspan><tspan x="32.795" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">0</tspan></text>
+<text transform="matrix(1 0 0 1 95.5903 228.5303)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">LD</tspan><tspan x="9.079" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">11</tspan><tspan x="15.92" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">17D33T</tspan><tspan x="41.194" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">R</tspan></text>
 <g>
-	<text transform="matrix(1 0 0 1 158.2256 227.4502)" fill="#808080" font-family="'ArialMT'" font-size="7.08">u</text>
-	<text transform="matrix(1 0 0 1 154.2666 227.4502)" fill="#808080" font-family="'ArialMT'" font-size="7.08">0</text>
-	<text transform="matrix(1 0 0 1 150.3076 227.4502)" fill="#808080" font-family="'ArialMT'" font-size="7.08">1</text>
-	<text transform="matrix(1 0 0 1 43.0884 227.4502)" fill="#808080" font-family="'ArialMT'" font-size="7.08">u</text>
-	<text transform="matrix(1 0 0 1 39.1294 227.4502)" fill="#808080" font-family="'ArialMT'" font-size="7.08">0</text>
-	<text transform="matrix(1 0 0 1 35.1704 227.4502)" fill="#808080" font-family="'ArialMT'" font-size="7.08">1</text>
+	<text transform="matrix(1 0 0 1 158.2256 227.4502)" fill="#808080" font-family="'Arial'" font-size="7.08">u</text>
+	<text transform="matrix(1 0 0 1 154.2666 227.4502)" fill="#808080" font-family="'Arial'" font-size="7.08">0</text>
+	<text transform="matrix(1 0 0 1 150.3076 227.4502)" fill="#808080" font-family="'Arial'" font-size="7.08">1</text>
+	<text transform="matrix(1 0 0 1 43.0884 227.4502)" fill="#808080" font-family="'Arial'" font-size="7.08">u</text>
+	<text transform="matrix(1 0 0 1 39.1294 227.4502)" fill="#808080" font-family="'Arial'" font-size="7.08">0</text>
+	<text transform="matrix(1 0 0 1 35.1704 227.4502)" fill="#808080" font-family="'Arial'" font-size="7.08">1</text>
 </g>
-<text transform="matrix(1 0 0 1 81.2505 257.3301)" fill="#808080" font-family="'ArialMT'" font-size="7.08">GND</text>
-<text transform="matrix(1 0 0 1 74.0508 77.4497)" fill="#808080" font-family="'ArialMT'" font-size="7.08">GND</text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 74.0503 27.0498)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">+</tspan><tspan x="4.149" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">5</tspan><tspan x="8.093" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">V</tspan></text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 23.6504 192.5898)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">+</tspan><tspan x="4.148" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">5</tspan><tspan x="8.094" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">V</tspan></text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 138.79 192.5908)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">+3V</tspan><tspan x="12.837" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">3</tspan></text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 191.29 160.1895)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">10</tspan><tspan x="7.918" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">k</tspan></text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 191.291 203.3887)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">10</tspan><tspan x="7.918" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">k</tspan></text>
-<text transform="matrix(1 0 0 1 174.79 257.3301)" fill="#808080" font-family="'ArialMT'" font-size="7.08">GND</text>
-<text transform="matrix(1 0 0 1 153.1904 99.0498)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">BSS12</tspan><tspan x="22.113" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">3</tspan></text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 126.5498 131.3896)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">68</tspan><tspan x="7.918" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">k</tspan></text>
-<text transform="matrix(1 0 0 1 77.6499 108.3496)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">39</tspan><tspan x="7.917" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">k</tspan></text>
-<text transform="matrix(1 0 0 1 109.9902 156.5898)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">G</tspan><tspan x="5.507" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">N</tspan><tspan x="10.613" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08" letter-spacing="13">D</tspan><tspan x="28.788" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">G</tspan><tspan x="34.303" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">N</tspan><tspan x="39.408" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">D</tspan></text>
-<text transform="matrix(1 0 0 1 36.6099 69.8896)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">JP</tspan><tspan x="8.276" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">1</tspan></text>
-<text transform="matrix(1 0 0 1 37.4502 54.8296)" fill="#808080" font-family="'ArialMT'" font-size="6.06">1</text>
-<text transform="matrix(1 0 0 1 37.4502 47.6299)" fill="#808080" font-family="'ArialMT'" font-size="6.06">2</text>
-<text transform="matrix(1 0 0 1 37.4502 40.4297)" fill="#808080" font-family="'ArialMT'" font-size="6.06">3</text>
-<text transform="matrix(1 0 0 1 95.5898 221.3301)" fill="#808080" font-family="'ArialMT'" font-size="7.08">IC1</text>
-<text transform="matrix(1 0 0 1 82.6899 211.9697)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="6.06">AD</tspan><tspan x="8.406" y="0" fill="#808080" font-family="'ArialMT'" font-size="6.06">J</tspan></text>
-<text transform="matrix(1 0 0 1 75.8501 201.5898)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="6.06">I</tspan><tspan x="1.69" y="0" fill="#808080" font-family="'ArialMT'" font-size="6.06" letter-spacing="6">N</tspan><tspan x="12.908" y="0" fill="#808080" font-family="'ArialMT'" font-size="6.06">O</tspan><tspan x="17.627" y="0" fill="#808080" font-family="'ArialMT'" font-size="6.06">UT</tspan></text>
+<text transform="matrix(1 0 0 1 81.2505 257.3301)" fill="#808080" font-family="'Arial'" font-size="7.08">GND</text>
+<text transform="matrix(1 0 0 1 74.0508 77.4497)" fill="#808080" font-family="'Arial'" font-size="7.08">GND</text>
+<text transform="matrix(0 -1 1 0 74.0503 27.0498)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">+</tspan><tspan x="4.149" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">5</tspan><tspan x="8.094" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">V</tspan></text>
+<text transform="matrix(0 -1 1 0 23.6504 192.5898)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">+</tspan><tspan x="4.148" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">5</tspan><tspan x="8.094" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">V</tspan></text>
+<text transform="matrix(0 -1 1 0 138.79 192.5908)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">+3V</tspan><tspan x="12.837" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">3</tspan></text>
+<text transform="matrix(0 -1 1 0 191.29 160.1895)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">10</tspan><tspan x="7.917" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">k</tspan></text>
+<text transform="matrix(0 -1 1 0 191.291 203.3887)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">10</tspan><tspan x="7.917" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">k</tspan></text>
+<text transform="matrix(1 0 0 1 174.79 257.3301)" fill="#808080" font-family="'Arial'" font-size="7.08">GND</text>
+<text transform="matrix(1 0 0 1 153.1904 99.0498)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">BSS12</tspan><tspan x="22.113" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">3</tspan></text>
+<text transform="matrix(0 -1 1 0 126.5498 131.3896)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">68</tspan><tspan x="7.917" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">k</tspan></text>
+<text transform="matrix(1 0 0 1 77.6499 108.3496)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">39</tspan><tspan x="7.917" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">k</tspan></text>
+<text transform="matrix(1 0 0 1 109.9902 156.5898)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">G</tspan><tspan x="5.507" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">N</tspan><tspan x="10.613" y="0" fill="#808080" font-family="'Arial'" font-size="7.08" letter-spacing="13">D</tspan><tspan x="28.789" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">G</tspan><tspan x="34.303" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">N</tspan><tspan x="39.409" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">D</tspan></text>
+<text transform="matrix(1 0 0 1 36.6099 69.8896)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">JP</tspan><tspan x="8.276" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">1</tspan></text>
+<text transform="matrix(1 0 0 1 37.4502 54.8296)" fill="#808080" font-family="'Arial'" font-size="6.06">1</text>
+<text transform="matrix(1 0 0 1 37.4502 47.6299)" fill="#808080" font-family="'Arial'" font-size="6.06">2</text>
+<text transform="matrix(1 0 0 1 37.4502 40.4297)" fill="#808080" font-family="'Arial'" font-size="6.06">3</text>
+<text transform="matrix(1 0 0 1 95.5898 221.3301)" fill="#808080" font-family="'Arial'" font-size="7.08">IC1</text>
+<text transform="matrix(1 0 0 1 82.6899 211.9697)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="6.06">AD</tspan><tspan x="8.406" y="0" fill="#808080" font-family="'Arial'" font-size="6.06">J</tspan></text>
+<text transform="matrix(1 0 0 1 75.8501 201.5898)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="6.06">I</tspan><tspan x="1.689" y="0" fill="#808080" font-family="'Arial'" font-size="6.06" letter-spacing="6">N</tspan><tspan x="12.908" y="0" fill="#808080" font-family="'Arial'" font-size="6.06">O</tspan><tspan x="17.628" y="0" fill="#808080" font-family="'Arial'" font-size="6.06">UT</tspan></text>
 <g>
-	<text transform="matrix(1 0 0 1 155.4072 213.0498)" fill="#808080" font-family="'ArialMT'" font-size="7.08">2</text>
-	<text transform="matrix(1 0 0 1 150.3076 213.0498)" fill="#808080" font-family="'ArialMT'" font-size="7.08">C</text>
-	<text transform="matrix(1 0 0 1 40.269 213.0498)" fill="#808080" font-family="'ArialMT'" font-size="7.08">1</text>
-	<text transform="matrix(1 0 0 1 35.1699 213.0498)" fill="#808080" font-family="'ArialMT'" font-size="7.08">C</text>
+	<text transform="matrix(1 0 0 1 155.4072 213.0498)" fill="#808080" font-family="'Arial'" font-size="7.08">2</text>
+	<text transform="matrix(1 0 0 1 150.3076 213.0498)" fill="#808080" font-family="'Arial'" font-size="7.08">C</text>
+	<text transform="matrix(1 0 0 1 40.269 213.0498)" fill="#808080" font-family="'Arial'" font-size="7.08">1</text>
+	<text transform="matrix(1 0 0 1 35.1699 213.0498)" fill="#808080" font-family="'Arial'" font-size="7.08">C</text>
 </g>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 177.7295 160.1895)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">R</tspan><tspan x="5.105" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">1</tspan></text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 177.7305 203.3887)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">R</tspan><tspan x="5.105" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">2</tspan></text>
-<text transform="matrix(1 0 0 1 153.1904 91.8496)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">Q</tspan><tspan x="5.514" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">1</tspan></text>
-<text transform="matrix(-6.123234e-017 -1 1 -6.123234e-017 112.9297 131.3906)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">R</tspan><tspan x="5.105" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">3</tspan></text>
-<text transform="matrix(1 0 0 1 77.6499 94.7896)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">R</tspan><tspan x="5.106" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">4</tspan></text>
-<text transform="matrix(1 0 0 1 52.4502 55.8496)" fill="#808080" font-family="'ArialMT'" font-size="7.08">GND</text>
+<text transform="matrix(0 -1 1 0 177.7295 160.1895)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">R</tspan><tspan x="5.106" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">1</tspan></text>
+<text transform="matrix(0 -1 1 0 177.7305 203.3887)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">R</tspan><tspan x="5.106" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">2</tspan></text>
+<text transform="matrix(1 0 0 1 153.1904 91.8496)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">Q</tspan><tspan x="5.514" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">1</tspan></text>
+<text transform="matrix(0 -1 1 0 112.9297 131.3906)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">R</tspan><tspan x="5.106" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">3</tspan></text>
+<text transform="matrix(1 0 0 1 77.6499 94.7896)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">R</tspan><tspan x="5.106" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">4</tspan></text>
+<text transform="matrix(1 0 0 1 52.4502 55.8496)" fill="#808080" font-family="'Arial'" font-size="7.08">GND</text>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,134.99 48.85,138.59 35.59,138.59 "/>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,134.99 48.85,131.39 35.59,131.39 "/>
 <line fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="35.59" y1="138.59" x2="35.59" y2="131.39"/>
-<text transform="matrix(1 0 0 1 37.6299 136.7896)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">G</tspan><tspan x="3.905" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">N</tspan><tspan x="7.56" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">D</tspan></text>
-<text transform="matrix(1 0 0 1 52.4502 48.6499)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">D</tspan><tspan x="5.106" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">A</tspan><tspan x="9.312" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">T</tspan><tspan x="13.155" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">A</tspan></text>
-<text transform="matrix(1 0 0 1 52.4502 41.4502)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">+</tspan><tspan x="4.149" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">5</tspan><tspan x="8.093" y="0" fill="#808080" font-family="'ArialMT'" font-size="7.08">V</tspan></text>
+<text transform="matrix(1 0 0 1 37.6299 136.7896)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">G</tspan><tspan x="3.905" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">N</tspan><tspan x="7.56" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">D</tspan></text>
+<text transform="matrix(1 0 0 1 52.4502 48.6499)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">D</tspan><tspan x="5.105" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">A</tspan><tspan x="9.311" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">T</tspan><tspan x="13.154" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">A</tspan></text>
+<text transform="matrix(1 0 0 1 52.4502 41.4502)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">+</tspan><tspan x="4.149" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">5</tspan><tspan x="8.094" y="0" fill="#808080" font-family="'Arial'" font-size="7.08">V</tspan></text>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,127.79 48.85,131.39 34.87,131.39 "/>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,127.79 48.85,124.19 34.87,124.19 "/>
 <line fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="34.87" y1="131.39" x2="34.87" y2="124.19"/>
-<text transform="matrix(1 0 0 1 36.9102 129.5898)" fill="#808080" font-family="'ArialMT'" font-size="5.04">+3V3</text>
+<text transform="matrix(1 0 0 1 36.9102 129.5898)" fill="#808080" font-family="'Arial'" font-size="5.04">+3V3</text>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,120.59 48.85,124.19 19.27,124.19 "/>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,120.59 48.85,116.99 19.27,116.99 "/>
 <line fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="19.27" y1="124.19" x2="19.27" y2="116.99"/>
-<text transform="matrix(1 0 0 1 21.6699 122.3896)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">M</tspan><tspan x="4.143" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">SP430_</tspan><tspan x="22.139" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">I</tspan><tspan x="23.524" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">N</tspan></text>
+<text transform="matrix(1 0 0 1 21.6699 122.3896)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">M</tspan><tspan x="4.143" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">SP430_</tspan><tspan x="22.14" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">I</tspan><tspan x="23.525" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">N</tspan></text>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,113.39 48.85,116.99 13.51,116.99 "/>
 <polyline fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	52.45,113.39 48.85,109.79 13.51,109.79 "/>
 <line fill="none" stroke="#808080" stroke-width="0.72" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="13.51" y1="116.99" x2="13.51" y2="109.79"/>
-<text transform="matrix(1 0 0 1 16.0298 115.1895)"><tspan x="0" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">M</tspan><tspan x="4.143" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">SP430_</tspan><tspan x="22.139" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">O</tspan><tspan x="26.044" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">U</tspan><tspan x="29.693" y="0" fill="#808080" font-family="'ArialMT'" font-size="5.04">T</tspan></text>
+<text transform="matrix(1 0 0 1 16.0298 115.1895)"><tspan x="0" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">M</tspan><tspan x="4.143" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">SP430_</tspan><tspan x="22.14" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">O</tspan><tspan x="26.045" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">U</tspan><tspan x="29.695" y="0" fill="#808080" font-family="'Arial'" font-size="5.04">T</tspan></text>
 <polyline fill="none" stroke="#760009" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	48.85,34.25 27.25,34.25 27.25,63.05 48.85,63.05 48.85,34.25 "/>
 <circle fill="none" stroke="#760009" stroke-width="0.48" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="33.67" cy="55.85" r="2.82"/>
