@@ -6258,12 +6258,12 @@ www.irf.com&lt;p&gt;
 <part name="P+1" library="supply1" deviceset="+5V" device=""/>
 <part name="P+2" library="supply1" deviceset="+5V" device=""/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="M0805" value="10k"/>
-<part name="R2" library="rcl" deviceset="R-EU_" device="M0805" value="10k"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="M0805" value="39k"/>
+<part name="R2" library="rcl" deviceset="R-EU_" device="M0805" value="68k"/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="Q1" library="transistor-small-signal" deviceset="BSS123" device=""/>
-<part name="R3" library="rcl" deviceset="R-EU_" device="M0805" value="68k"/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="M0805" value="39k"/>
+<part name="R3" library="rcl" deviceset="R-EU_" device="M0805" value="10k"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="M0805" value="10k"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 </parts>
