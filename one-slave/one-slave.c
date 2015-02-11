@@ -82,6 +82,11 @@ uint8_t selected_device;
 one_device * device;
 uint8_t device_count;
 
+union {
+	uint8_t data_int8[32];
+	uint16_t data_int16[16];
+} device_addr = { 0 };
+
 void clock_system_setup() {
 	/*
 	 * Basic clock system+ setup
@@ -174,6 +179,19 @@ void one_init(one_device * d, const uint8_t count) {
 		device[i].rom |= (uint64_t) crc8((uint8_t *) &crc_array, 7) << 56;
 		device[i].init(&device[i]);
 	} while (i--);
+	// Fill device address array
+	uint8_t device_index;
+	uint8_t current;
+	for (i = 0; i < 64; i++) {
+		for (device_index = 0; device_index < device_count; device_index++) {
+			current = device[device_index].rom & ((uint64_t)1 << i) ? 1 : 0;
+			if (i & 0x01) {
+				device_addr.data_int8[i >> 1] |= current << (device_index + 4);
+			} else {
+				device_addr.data_int8[i >> 1] |= current << (device_index);
+			}
+		}
+	}
 }
 
 void process_command(uint8_t command) {
@@ -274,30 +292,24 @@ void process_state_waiting_for_reset() {
 
 void process_state_search_rom() {
 	uint8_t mask = (MASK_HIGH_4 >> (4 - device_count)) & MASK_LOWER_4;
-	uint8_t device_addr[32] = {0};
-	uint8_t current;
+	union {
+		uint8_t data_int8[32];
+		uint16_t data_int16[16];
+	} search_addr;
 	uint8_t index;
 	uint8_t direction;
 	uint8_t addr_bits;
-	uint8_t device_index;
 
-	for (index = 0; index < 64; index++) {
-		for (device_index = 0; device_index < device_count; device_index++) {
-			current = device[device_index].rom & ((uint64_t)1 << index) ? 1 : 0;
-			if (index & 0x01) {
-				device_addr[index >> 1] |= current << (device_index + 4);
-			} else {
-				device_addr[index >> 1] |= current << (device_index);
-			}
-		}
+	for (index = 0; index < 16; index++) {
+		search_addr.data_int16[index] = device_addr.data_int16[index];
 	}
 
 	index = 0;
 	while (1) {
 		addr_bits =
 			(index & 0x01) ?
-			device_addr[index >> 1] >> 4 :
-			device_addr[index >> 1] & MASK_LOWER_4;
+			search_addr.data_int8[index >> 1] >> 4 :
+			search_addr.data_int8[index >> 1] & MASK_LOWER_4;
 
 		addr_bits |= mask;
 		timeslot_write(addr_bits == MASK_LOWER_4);
