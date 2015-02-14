@@ -36,6 +36,25 @@
 #define CMD_WRITE_CS		0xCC
 #define CMD_RESET_AL		0xC3
 
+void reg_write(uint8_t address, one_2408 * d2408, uint8_t data) {
+	switch (address) {
+	case REG_OUT_LATCH:
+		* (d2408->port_base + OFS_OUT) = ~data;
+		break;
+	case REG_COND_SEL:
+		d2408->reg_cond_mask = data;
+		break;
+	case REG_COND_POL:
+		* (d2408->port_base + OFS_DIR) = data;
+		break;
+	case REG_ACT_LATCH:
+		* (d2408->port_base + OFS_IFG) = data;
+		break;
+	default:
+		break;
+	}
+}
+
 inline uint8_t reg_read(uint8_t address, one_2408 * d2408) {
 	uint8_t reg_data;
 	switch (address) {
@@ -68,30 +87,85 @@ void pio_read(void * device) {
 	union {
 		uint16_t data_int16;
 		uint8_t data_int8[2];
-	} reg_addr;
-	union {
-		uint16_t data_int16;
-		uint8_t data_int8[2];
 	} 			crc 		= { 0 };
-	one_2408 	* d2408 	= (one_2408 *) device;
+	uint8_t 	reg_addr;
+	one_2408 * 	d2408 		= (one_2408 *) device;
 	uint8_t 	i;
 	uint8_t 	reg_data;
 
-	reg_addr.data_int8[0] = one_read_byte();
-	reg_addr.data_int8[1] = one_read_byte();
+	reg_addr = one_read_byte();
+	one_read_byte();
 
 	crc.data_int16 = crc16(CMD_PIO_READ, crc.data_int16);
-	crc.data_int16 = crc16(reg_addr.data_int8[0], crc.data_int16);
-	crc.data_int16 = crc16(reg_addr.data_int8[1], crc.data_int16);
+	crc.data_int16 = crc16(reg_addr, crc.data_int16);
+	crc.data_int16 = crc16(0, crc.data_int16);
 
 	for (
-		i = (uint8_t) reg_addr.data_int16 - REG_OFFSET;
+		i = reg_addr - REG_OFFSET;
 		i < REG_PAGE_LENGTH;
 		i++
 	) {
 		reg_data = reg_read(i, d2408);
 		one_write_byte(reg_data);
 		crc.data_int16 = crc16(reg_data, crc.data_int16);
+	}
+
+	one_write_byte(~crc.data_int8[0]);
+	one_write_byte(~crc.data_int8[1]);
+}
+
+void write_cs_reg(void * device) {
+	uint8_t 	reg_addr;
+	one_2408 * 	d2408 	= (one_2408 *) device;
+
+	reg_addr = one_read_byte();
+	one_read_byte();
+
+	if (
+		(reg_addr < 0x8B) ||
+		(reg_addr > 0x8D)
+	) {
+		return;
+	}
+
+	reg_write(reg_addr - REG_OFFSET, d2408, one_read_byte());
+}
+
+void channel_access_write(void * device) {
+	one_2408 *	d2408 		= (one_2408 *) device;
+	uint8_t 	state 		= one_read_byte();
+
+	if ((uint8_t) (~state) == one_read_byte()) {
+		reg_write(REG_OUT_LATCH, d2408, state);
+	}
+
+	one_write_byte(0xAA);
+	one_write_byte(state);
+}
+
+void reset_activity_latch(void * device) {
+	one_2408 * d2408 = (one_2408 *) device;
+
+	reg_write(REG_ACT_LATCH, d2408, 0);
+
+	one_write_byte(0xAA);
+}
+
+void channel_access_read(void * device) {
+	union {
+		uint16_t data_int16;
+		uint8_t data_int8[2];
+	} crc;
+	uint8_t i;
+	uint8_t data;
+	one_2408 * d2408 = (one_2408 *) device;
+
+	crc.data_int16 = crc16(CMD_CH_READ, 0);
+
+	for (i = 0; i < 32; i++) {
+		data = * (d2408->port_base + OFS_IN);
+		one_write_byte(data);
+		crc.data_int16 = crc16(data, crc.data_int16);
 	}
 
 	one_write_byte(~crc.data_int8[0]);
@@ -106,16 +180,16 @@ void one_2408_process(void * device) {
 			pio_read(device);
 			break;
 	    case CMD_CH_READ:
-	    	_NOP();
+	    	channel_access_read(device);
 	    	break;
 	    case CMD_CH_WRITE:
-	    	_NOP();
+	    	channel_access_write(device);
 	    	break;
 	    case CMD_WRITE_CS:
-	    	_NOP();
+	    	write_cs_reg(device);
 	    	break;
 	    case CMD_RESET_AL:
-	    	_NOP();
+	    	reset_activity_latch(device);
 	    	break;
 	    default:
 	    	break;
@@ -128,6 +202,10 @@ void one_2408_init(void * device) {
 
 	d = (one_device *) device;
 	d2408 = (one_2408 *) d->device;
+
+	* (d2408->port_base + OFS_OUT) = 0;
+	* (d2408->port_base + OFS_DIR) = 0;
+	* (d2408->port_base + OFS_IFG) = 0;
 
 	d->process = &one_2408_process;
 	d2408->reg_cond_mask = 0;
