@@ -34,8 +34,8 @@
 #define DELAY(US, CLOCK_FREQ)		(CLOCK_FREQ / 1'000'000 * US)
 
 #define TIME_RESET_MIN				480
-#define TIME_PRESENCE				150
-#define TIME_PRESENCE_DELAY			10
+#define TIME_PRESENCE				130
+#define TIME_PRESENCE_DELAY			15
 #define TIME_TS_VALUE				30
 #define TIME_TS_OUT					25
 
@@ -75,9 +75,10 @@ typedef enum {
 
 one_state_type state;
 
-uint8_t timer_flag = 0;
 uint8_t search_rom_cond = 0;
 uint8_t selected_device;
+uint8_t reset_lpm_exit = 0;
+uint8_t one_reset_flag = 0;
 
 one_device * device;
 uint8_t device_count;
@@ -101,8 +102,9 @@ void clock_system_setup() {
 }
 
 inline void timer_start() {
+	TA0R = 0;
 	// Upmode
-	TA0CTL |= MC_1;
+	TA0CTL |= MC_2;
 }
 
 inline void timer_stop() {
@@ -116,6 +118,8 @@ void timer_init() {
 	// Clear timer
 	TA0CTL = TACLR + MC_0 + TAIE + TASSEL_2;
 	TA0CCTL0 |= CCIE;
+	TA0CCTL1 |= CCIE;
+	TA0CCR1 = DELAY_US(TIME_RESET_MIN);
 }
 
 /*
@@ -213,12 +217,11 @@ void process_command(uint8_t command) {
 
 void process_state_idle() {
 	LPM1;
-	TA0CCR0 = DELAY_US(TIME_RESET_MIN);
-	timer_flag = 0;
+	TA0CCR0 = 0xFFFF;
 	timer_start();
+	reset_lpm_exit = 1;
 	//
-	state = state_waiting_for_reset;
-	EDGE_RISE;
+	LPM1;
 }
 
 uint8_t timeslot_read() {
@@ -244,10 +247,11 @@ void one_write_byte(uint8_t data) {
 	uint8_t data_bits_processed = 0;
 	EDGE_FALL;
 	TA0CCR0 = 0xFFFF;
-	while (data_bits_processed < 8) {
+	while ((data_bits_processed < 8) && !one_reset_flag) {
 		timeslot_write(data & (1 << data_bits_processed));
 		data_bits_processed++;
 	}
+	timer_stop();
 }
 
 uint8_t one_read_byte() {
@@ -255,39 +259,34 @@ uint8_t one_read_byte() {
 	uint8_t data_bits_processed = 0;
 	EDGE_FALL;
 	TA0CCR0 = 0xFFFF;
-	while (data_bits_processed < 8) {
+	while ((data_bits_processed < 8) && !one_reset_flag) {
 		data |= (timeslot_read()) << data_bits_processed;
 		data_bits_processed++;
 	}
+	timer_stop();
 	return data;
 }
 
 void process_state_waiting_for_reset() {
+	one_reset_flag = 0;
+	while ((ONE_BIT_IN & ONE_PIN) == 0);
+	// Send presence response
+	TA0CCR0 = DELAY_US(TIME_PRESENCE_DELAY);
+	timer_start();
 	LPM1;
-	// Check if reset was long enough
-	if (0 == timer_flag) {
-		TA0R = 0;
-		timer_stop();
-		EDGE_FALL;
-		state = state_idle;
-	} else {
-		timer_flag = 0;
-		LPM1;
-		TA0CCR0 = DELAY_US(TIME_PRESENCE_DELAY);
-		timer_start();
-		LPM1;
-		TA0CCR0 = DELAY_US(TIME_PRESENCE);
-		timer_start();
-		//
-		INT_DISABLE;
-		OUTPUT_ASSERT;
-		//
-		LPM1;
-		//
-		OUTPUT_DEASSERT;
-		INT_ENABLE;
-		process_command(one_read_byte());
-	}
+	//
+	TA0CCR0 = DELAY_US(TIME_PRESENCE);
+	timer_start();
+	//
+	INT_DISABLE;
+	OUTPUT_ASSERT;
+	//
+	LPM1;
+	//
+	OUTPUT_DEASSERT;
+	INT_ENABLE;
+	timer_stop();
+	process_command(one_read_byte());
 }
 
 void process_state_search_rom() {
@@ -305,7 +304,8 @@ void process_state_search_rom() {
 	}
 
 	index = 0;
-	while (1) {
+
+	while (!one_reset_flag) {
 		addr_bits =
 			(index & 0x01) ?
 			search_addr.data_int8[index >> 1] >> 4 :
@@ -325,6 +325,7 @@ void process_state_search_rom() {
 		}
 		index++;
 	}
+
 	search_rom_cond = 0;
 	state = state_idle;
 }
@@ -377,6 +378,9 @@ void one_process_state() {
 	default:
 		break;
 	}
+	if (one_reset_flag) {
+		state = state_waiting_for_reset;
+	}
 }
 
 #pragma vector=ONE_VECTOR
@@ -388,13 +392,23 @@ __interrupt void one_interrupt() {
 }
 
 #pragma vector=TIMER0_A0_VECTOR
-__interrupt void one_timer_interrupt() {
-	if (TA0CTL & CCIFG) {
-		TA0R = 0;
+__interrupt void one_timer_timeslot() {
+	LPM1_EXIT;
+}
+
+#pragma vector=TIMER0_A1_VECTOR
+__interrupt void one_timer_reset() {
+	switch (__even_in_range(TA0IV, TA0IV_TAIFG)) {
+	case TA0IV_TACCR1:
 		timer_stop();
-		// Clear interrupt flag
-		TA0CTL &= ~CCIFG;
-		timer_flag = 1;
-		LPM1_EXIT;
+		one_reset_flag = (ONE_PIN & ONE_BIT_IN) == 0;
+		if (reset_lpm_exit || one_reset_flag) {
+			reset_lpm_exit = 0;
+			LPM1_EXIT;
+		}
+		break;
+	default:
+		timer_stop();
+		break;
 	}
 }

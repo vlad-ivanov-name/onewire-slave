@@ -117,6 +117,7 @@ void pio_read(void * device) {
 void write_cs_reg(void * device) {
 	uint8_t 	reg_addr;
 	one_2408 * 	d2408 	= (one_2408 *) device;
+	uint8_t 	data;
 
 	reg_addr = one_read_byte();
 	one_read_byte();
@@ -128,19 +129,44 @@ void write_cs_reg(void * device) {
 		return;
 	}
 
-	reg_write(reg_addr - REG_OFFSET, d2408, one_read_byte());
+	while (1) {
+		if (reg_addr > 0x8D) {
+			return;
+		}
+		data = one_read_byte();
+		if (one_reset_flag) {
+			return;
+		}
+		reg_write(reg_addr - REG_OFFSET, d2408, data);
+		reg_addr++;
+	}
 }
 
 void channel_access_write(void * device) {
 	one_2408 *	d2408 		= (one_2408 *) device;
-	uint8_t 	state 		= one_read_byte();
+	uint8_t 	address		= REG_OUT_LATCH;
+	uint8_t 	data;
 
-	if ((uint8_t) (~state) == one_read_byte()) {
-		reg_write(REG_OUT_LATCH, d2408, state);
+	while (1) {
+		data = one_read_byte();
+
+		if (one_reset_flag) {
+			return;
+		}
+
+		if ((uint8_t) (~data) == one_read_byte()) {
+			reg_write(address, d2408, data);
+		}
+
+		if (one_reset_flag) {
+			return;
+		}
+
+		one_write_byte(0xAA);
+		one_write_byte(data);
+
+		address++;
 	}
-
-	one_write_byte(0xAA);
-	one_write_byte(state);
 }
 
 void reset_activity_latch(void * device) {

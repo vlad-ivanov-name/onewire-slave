@@ -19,6 +19,8 @@ typedef struct {
 	void * device;
 } one_device;
 
+extern uint8_t one_reset_flag;
+
 void one_init(one_device * d, const uint8_t count);
 void one_process_state();
 
