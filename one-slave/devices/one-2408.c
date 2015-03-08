@@ -230,7 +230,7 @@ void one_2408_init(void * device) {
 	d2408 = (one_2408 *) d->device;
 
 	* (d2408->port_base + OFS_OUT) = 0;
-	* (d2408->port_base + OFS_DIR) = 0;
+	* (d2408->port_base + OFS_DIR) = ONE_2408_DEF_PDIR;
 	* (d2408->port_base + OFS_IFG) = 0;
 
 	d->process = &one_2408_process;

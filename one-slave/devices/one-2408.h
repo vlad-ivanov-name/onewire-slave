@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #define ONE_2408_FC					0x29
+#define ONE_2408_DEF_PDIR			0xFF
 
 void one_2408_process(void * device);
 void one_2408_init(void * device);
