@@ -1,5 +1,5 @@
 # one-slave
-1-wire<sup>1</sup> slave device emulation library for MSP430 microcontrollers.
+1-wire<sup>1</sup> slave device emulation library for MSP430 microcontrollers. [Open project wiki](https://github.com/resetnow/one-slave/wiki/)
 
 ## Features
 
