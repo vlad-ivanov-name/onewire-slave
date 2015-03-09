@@ -50,6 +50,9 @@ void reg_write(uint8_t address, one_2408 * d2408, uint8_t data) {
 	case REG_ACT_LATCH:
 		* (d2408->port_base + OFS_IFG) = data;
 		break;
+	case REG_CSR:
+		d2408->reg_csr = data;
+		break;
 	default:
 		break;
 	}
@@ -71,7 +74,7 @@ inline uint8_t reg_read(uint8_t address, one_2408 * d2408) {
 			reg_data = d2408->reg_cond_mask;
 			break;
 		case REG_COND_POL:
-			reg_data = d2408->reg_cond_pol;
+			reg_data = * (d2408->port_base + OFS_DIR);
 			break;
 		case REG_CSR:
 			reg_data = d2408->reg_csr;
@@ -222,6 +225,23 @@ void one_2408_process(void * device) {
 	}
 }
 
+uint8_t one_2408_condition(void * device) {
+	one_2408 *	d2408 		= (one_2408 *) device;
+	uint8_t 	cond_data;
+
+	cond_data =
+		d2408->reg_csr & CSR_PLS ?
+		* (d2408->port_base + OFS_IFG):
+		* (d2408->port_base + OFS_IN);
+
+	cond_data &= d2408->reg_cond_mask;
+
+	return
+		d2408->reg_csr & CSR_CT ?
+		AND_REDUCE(cond_data) :
+		OR_REDUCE(cond_data);
+}
+
 void one_2408_init(void * device) {
 	one_device * d;
 	one_2408 * d2408;
@@ -234,6 +254,7 @@ void one_2408_init(void * device) {
 	* (d2408->port_base + OFS_IFG) = 0;
 
 	d->process = &one_2408_process;
+	d->condition = &one_2408_condition;
 	d2408->reg_cond_mask = 0;
 	d2408->reg_cond_pol = 0;
 	d2408->reg_csr |= CSR_VCC | CSR_POR;

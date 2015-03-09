@@ -16,6 +16,7 @@ typedef struct {
 	uint64_t rom;
 	void (* process)(void * device);
 	void (* init)(void * device);
+	uint8_t (* condition)(void * device);
 	void * device;
 } one_device;
 

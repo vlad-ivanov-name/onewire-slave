@@ -9,6 +9,7 @@
 
 void one_2408_process(void * device);
 void one_2408_init(void * device);
+uint8_t one_2408_condition(void * device);
 
 typedef volatile unsigned char reg_type;
 

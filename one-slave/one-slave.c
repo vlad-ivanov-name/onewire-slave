@@ -303,6 +303,16 @@ void process_state_search_rom() {
 		search_addr.data_int16[index] = device_addr.data_int16[index];
 	}
 
+	if (search_rom_cond) {
+		for (index = 0; index < device_count; index++) {
+			mask |= ((!device[index].condition(device[index].device)) << index);
+		}
+	}
+
+	if (mask == 0) {
+		goto exit;
+	}
+
 	index = 0;
 
 	while (!one_reset_flag) {
@@ -326,6 +336,7 @@ void process_state_search_rom() {
 		index++;
 	}
 
+exit:
 	search_rom_cond = 0;
 	state = state_idle;
 }
@@ -381,6 +392,10 @@ void one_process_state() {
 	if (one_reset_flag) {
 		state = state_waiting_for_reset;
 	}
+}
+
+uint8_t one_condition_dummy(void * device) {
+	return 0;
 }
 
 #pragma vector=ONE_VECTOR
