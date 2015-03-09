@@ -12,7 +12,7 @@
 - [x] Basic protocol handling, reading/writing timeslots
 - [x] Search ROM command
 - [x] Match ROM command
-- [ ] 8-bit switch implementation (one-2408)
+- [x] 8-bit switch implementation (one-2408)
 - [ ] Extension API documentation
 
 ## Hardware
