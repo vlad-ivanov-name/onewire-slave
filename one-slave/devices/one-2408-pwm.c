@@ -263,7 +263,5 @@ void one_2408_pwm_init(void * device) {
 	d->process = &one_2408_pwm_process;
 	d->condition = &one_condition_dummy;
 
-	d2408_pwm->reg_cond_mask = 0;
-	d2408_pwm->reg_cond_pol = 0;
 	d2408_pwm->reg_csr |= CSR_VCC | CSR_POR;
 }

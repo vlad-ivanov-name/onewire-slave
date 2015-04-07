@@ -17,8 +17,6 @@ typedef struct {
 	reg16_type * timer_ccr;
 	uint8_t out_bit;
 	uint8_t reg_csr;
-	uint8_t reg_cond_mask;
-	uint8_t reg_cond_pol;
 } one_2408_pwm;
 
 #endif
