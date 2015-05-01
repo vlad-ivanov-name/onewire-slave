@@ -74,11 +74,13 @@ typedef enum {
 } one_state_type;
 
 one_state_type state;
+one_event_loop event_cb = 0;
 
 uint8_t search_rom_cond = 0;
 uint8_t selected_device;
 uint8_t reset_lpm_exit = 0;
 uint8_t one_reset_flag = 0;
+uint8_t user_event_flag = 0;
 
 one_device * device;
 uint8_t device_count;
@@ -398,9 +400,66 @@ uint8_t one_condition_dummy(void * device) {
 	return 0;
 }
 
+
+/*
+
+when an interrupt occurs, timer starts and user event flag is cleared;
+when a timer hits reset time and user event flag is not set, a reset flag may be set;
+
+if (event loop delayed) {
+	set event loop delay (ccr2);
+}
+
+when an interrupt occurs, timer starts;
+when a timer hits reset time, a flag may be set;
+
+loop {
+	if (event loop delayed) {
+		start timer;
+		go to lpm;
+	}
+	if (user has specified the event callback) {
+		process user-provided event;
+	}
+} until (no reset flag);
+
+*/
+
+void one_set_event_loop(one_event_loop cb) {
+	event_cb = cb;
+}
+
+void one_start() {
+	state = state_idle;
+
+	while(1) {
+		if (
+			(!one_reset_flag) &&
+			(state == state_idle)
+		) {
+			// No reset happened, it's safe to invoke the callback
+			// Timer is not running
+			if (event_cb) {
+				event_cb();
+			}
+			//
+			TA0CCR2 = 0xFF00;
+			timer_start();
+			LPM1;
+		} else {
+			// 1-wire transaction in progress
+			// Timer is not running
+			state = state_waiting_for_reset;
+			one_process_state();
+		}
+	}
+}
+
 #pragma vector=ONE_VECTOR
 __interrupt void one_interrupt() {
 	if (ONE_IFG & ONE_BIT_IN) {
+		TA0R = 0;
+		user_event_flag = 1;
 		ONE_IFG &= ~ONE_BIT_IN;
 		LPM1_EXIT;
 	}
@@ -415,14 +474,24 @@ __interrupt void one_timer_timeslot() {
 __interrupt void one_timer_reset() {
 	switch (__even_in_range(TA0IV, TA0IV_TAIFG)) {
 	case TA0IV_TACCR1:
-		timer_stop();
-		one_reset_flag = (ONE_PIN & ONE_BIT_IN) == 0;
+		one_reset_flag =
+			(user_event_flag) &&
+			((ONE_PIN & ONE_BIT_IN) == 0);
+
+		if (user_event_flag) {
+			timer_stop();
+		}
+
 		if (reset_lpm_exit || one_reset_flag) {
 			reset_lpm_exit = 0;
 			LPM1_EXIT;
 		}
 		break;
+	case TA0IV_TACCR2:
+		timer_stop();
+		break;
 	default:
+		LPM1_EXIT;
 		timer_stop();
 		break;
 	}

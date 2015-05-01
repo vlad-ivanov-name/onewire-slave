@@ -20,13 +20,16 @@ typedef struct {
 	void * device;
 } one_device;
 
+typedef void (* one_event_loop)();
+
 extern uint8_t one_reset_flag;
 
 void one_init(one_device * d, const uint8_t count);
-void one_process_state();
-
+void one_start();
+void one_set_event_loop(one_event_loop cb);
 uint8_t one_read_byte();
 void one_write_byte(uint8_t data);
 uint16_t crc16(uint8_t input, uint16_t seed);
+uint8_t one_condition_dummy();
 
 #endif
