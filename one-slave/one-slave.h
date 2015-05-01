@@ -6,9 +6,11 @@
 #include <string.h>
 #include "memory/offset.h"
 
+#ifndef ONE_CONFIG_EXTERNAL
 #define ONE_PORT		2
 #define ONE_B_IN		5
 #define ONE_B_OUT		4
+#endif
 
 #define ARRAY_SIZE(a)	(sizeof(a) / sizeof((a)[0]))
 
