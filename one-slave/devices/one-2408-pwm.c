@@ -22,7 +22,7 @@
 #define CMD_WRITE_CS		0xCC
 #define CMD_RESET_AL		0xC3
 
-#define PWM_STEPS			128
+#define PWM_STEPS			127
 #define UINT8_T_MAX			0xFF
 
 uint8_t instance_count = 0;
@@ -30,22 +30,21 @@ uint8_t instance_count = 0;
 inline uint16_t reg_to_steps(uint8_t reg) {
 	uint16_t v = reg * PWM_STEPS / UINT8_T_MAX;
 	if (reg == 0) {
-		v = PWM_STEPS;
-	} else if (reg == UINT8_T_MAX) {
-		/* FIXME needs testing */
 		v = 0;
+	} else if (reg == UINT8_T_MAX) {
+		v = PWM_STEPS;
 	}
-	return v;
+	return PWM_STEPS - v;
 }
 
 inline uint8_t steps_to_reg(uint8_t steps) {
 	uint8_t v = steps * UINT8_T_MAX / PWM_STEPS;
 	if (steps == PWM_STEPS) {
-		v = 0;
-	} else if (steps == 0) {
 		v = UINT8_T_MAX;
+	} else if (steps == 0) {
+		v = 0;
 	}
-	return v;
+	return UINT8_T_MAX - v;
 }
 
 static void reg_write(uint8_t address, one_2408_pwm * d2408, uint8_t data) {
@@ -254,6 +253,7 @@ void one_2408_pwm_init(void * device) {
 	switch(instance_count) {
 	case 1:
 		d2408_pwm->timer_ccr = &TA1CCR1;
+		break;
 	case 2:
 		d2408_pwm->timer_ccr = &TA1CCR2;
 	default:
