@@ -413,8 +413,7 @@ __interrupt void one_timer_timeslot() {
 
 #pragma vector=TIMER0_A1_VECTOR
 __interrupt void one_timer_reset() {
-	switch (__even_in_range(TA0IV, TA0IV_TAIFG)) {
-	case TA0IV_TACCR1:
+	if (TA0IV == TA0IV_TACCR1) {
 		timer_stop();
 		one_reset_flag = (ONE_PIN & ONE_BIT_IN) == 0;
 		if (reset_lpm_exit || one_reset_flag) {
@@ -422,7 +421,8 @@ __interrupt void one_timer_reset() {
 			LPM1_EXIT;
 		}
 		break;
-	default:
+	}
+	else {
 		timer_stop();
 		break;
 	}
