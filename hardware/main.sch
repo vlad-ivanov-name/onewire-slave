@@ -6263,7 +6263,7 @@ www.irf.com&lt;p&gt;
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="Q1" library="transistor-small-signal" deviceset="BSS123" device=""/>
 <part name="R3" library="rcl" deviceset="R-EU_" device="M0805" value="10k"/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="M0805" value="10k"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="M0805" value="4.7k"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 </parts>
