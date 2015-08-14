@@ -421,8 +421,7 @@ __interrupt void one_timer_reset() {
 			LPM1_EXIT;
 		}
 		break;
-	}
-	else {
+	} else {
 		timer_stop();
 		break;
 	}
