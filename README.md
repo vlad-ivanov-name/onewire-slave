@@ -13,7 +13,7 @@
 - [x] Search ROM command
 - [x] Match ROM command
 - [x] 8-bit switch implementation (one-2408)
-- [ ] Extension API documentation
+- [x] Extension API documentation
 
 ## Hardware
 
